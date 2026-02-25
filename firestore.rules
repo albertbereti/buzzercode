@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User Balances: Users can only read their own data. System handles writes.
+    match /users/{phone} {
+      allow read: if request.auth != null && request.auth.token.phone_number == phone;
+      allow write: if false; // Only Cloud Functions/Guardian can update balances
+    }
+
+    // Creators: Publicly readable for the marketplace, but not writable by users.
+    match /creators/{extension} {
+      allow read: if true;
+      allow write: if false; // Updated via manage.js or creator dashboard (auth-restricted)
+    }
+
+    // Call Logs: Private to the system.
+    match /calls/{callId} {
+      allow read, write: if false; // System only
+    }
+  }
+}
