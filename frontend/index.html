@@ -44,7 +44,31 @@
 
             <div class="search-box">
                 <input type="text" id="codeSearch" placeholder="Enter Desired Code (0000-9999)" maxlength="4">
-                <button id="checkBtn">CHECK AVAILABILITY</button>
+                
+                <!-- Google Identity Services Vanilla Integration -->
+                <div id="g_id_onload"
+                     data-client_id="mock-client-id"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleCredentialResponse"
+                     data-auto_prompt="false">
+                </div>
+                <!-- Login Button Wrapper -->
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left">
+                </div>
+                <script src="https://accounts.google.com/gsi/client" async defer></script>
+                <script>
+                    function handleCredentialResponse(response) {
+                        console.log("Encoded JWT ID token: " + response.credential);
+                        document.getElementById('result').innerHTML = '<p class="success">OG Authenticated via Google. Code reserved!</p>';
+                    }
+                </script>
             </div>
 
             <div id="result" class="result-container"></div>
